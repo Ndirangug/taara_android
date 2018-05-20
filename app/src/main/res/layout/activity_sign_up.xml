@@ -21,7 +21,7 @@
         app:srcCompat="@drawable/transparent_white" />
 
     <EditText
-        android:id="@+id/editFirstNameSignUp"
+        android:id="@+id/edtFirstNameSignUp"
         android:layout_width="182dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="152dp"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editSecondNameSignUp"
+        android:id="@+id/edtSecondNameSignUp"
         android:layout_width="171dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
@@ -47,11 +47,12 @@
         android:textColor="@android:color/background_light"
         android:textColorHighlight="@android:color/background_light"
         android:textColorHint="@android:color/background_light"
-        app:layout_constraintTop_toTopOf="@+id/editFirstNameSignUp"
+        app:layout_constraintTop_toTopOf="@+id/edtFirstNameSignUp"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
-        android:id="@+id/editPhone"
+        android:id="@+id/edtPhoneSignUp"
+        android:maxLength="12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="220dp"
@@ -66,7 +67,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editEmailSignUp"
+        android:id="@+id/edtEmailSignUp"
         android:layout_width="318dp"
         android:layout_height="51dp"
         android:layout_marginTop="284dp"
@@ -92,7 +93,7 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editEmailSignUp" />
+        app:layout_constraintTop_toBottomOf="@id/edtEmailSignUp" />
 
     <Button
         android:id="@+id/btnSignUp"
