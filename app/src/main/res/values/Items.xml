@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="titles">
+        <item>Colgate herbal 250 ml</item>
+        <item>Quencher Purified drinking water 1.5l</item>
+        <item>Kartasi A4 excercise book ruled</item>
+        <item>HP Spectre 13 *360</item>
+        <item>Vaseline dry skin repair lotion</item>
+        <item>Nuvita digestive biscuits</item>
+        <item>Tropical Heat cheese and onion crisps</item>
+        <item>Geisha Bathing Soap</item>
+        <item>Kiwi black 100ml</item>
+        <item>Mens Cotton Polo Shirt</item>
+    </string-array>
+
+    <string-array name="prices">
+        <item>85</item>
+        <item>63</item>
+        <item>40</item>
+        <item>130000</item>
+        <item>130</item>
+        <item>72</item>
+        <item>80</item>
+        <item>55</item>
+        <item>95</item>
+        <item>700</item>
+    </string-array>
+
+    <string-array name="vat">
+        <item>16%</item>
+        <item>16%</item>
+        <item>16%</item>
+        <item>0</item>
+        <item>16%</item>
+        <item>0</item>
+        <item>16%</item>
+        <item>16%</item>
+        <item>0</item>
+        <item>16%</item>
+    </string-array>
+</resources>

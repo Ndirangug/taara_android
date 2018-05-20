@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Translucent.DeviceDefault.Dialog.Alert.Dialog.Alert" parent="android:Theme.Material.Dialog.Alert" >
+        <item name="android:colorBackground">@color/colorAccent</item>
+    </style>
+</resources>
