@@ -1,8 +1,8 @@
 package com.taara.android.taara;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -26,7 +26,7 @@ public class LogIn extends AppCompatActivity {
 
     public void showAccountInfo(View view) {
         //executes log in and proceeds to AccountInfo.java
-        User user = new User();
+        User user = new User(getApplicationContext());
        boolean confirm = user.logIn(mEmailOrPhone.getText().toString(), mPassword.getText().toString());
         Log.i("return confirm", String.valueOf(confirm));
 
