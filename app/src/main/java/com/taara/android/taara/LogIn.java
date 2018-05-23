@@ -11,6 +11,7 @@ import com.taara.android.taara.custom_objects.User;
 
 public class LogIn extends AppCompatActivity {
 
+    private static final String TAG = "LogIn";
     EditText mEmailOrPhone;
     EditText mPassword;
 
@@ -26,9 +27,31 @@ public class LogIn extends AppCompatActivity {
 
     public void showAccountInfo(View view) {
         //executes log in and proceeds to AccountInfo.java
-        User user = new User(getApplicationContext());
-       boolean confirm = user.logIn(mEmailOrPhone.getText().toString(), mPassword.getText().toString());
-        Log.i("return confirm", String.valueOf(confirm));
+        final User user = new User(getApplicationContext());
+        user.logIn(mEmailOrPhone.getText().toString(), mPassword.getText().toString());
+        Thread delay = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    sleep(2000);
+                    if (user.getLogIn()) {
+                        Log.i(TAG, "Log in successfull  ");
+                        Intent intent = new Intent(getApplicationContext(), AccountInformation.class);
+                        startActivity(intent);
+                    } else {
+                        Log.i(TAG, "Log in failed  ");
+                    }
+                    finish();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        delay.start();
+
+
+
 
     }
 

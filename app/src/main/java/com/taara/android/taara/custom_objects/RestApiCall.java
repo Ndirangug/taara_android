@@ -12,7 +12,7 @@ import org.json.JSONException;
 
 public class RestApiCall {
 
-    final String[] responseArray = new String[6];
+    final static String[] responseArray = new String[6];
     Context context;
     String url;
 
@@ -50,6 +50,7 @@ public class RestApiCall {
     }
 
     public String[] getResponseArray() {
+        Log.i("API response ", responseArray[0] + responseArray[1]);
         return responseArray;
     }
 }
