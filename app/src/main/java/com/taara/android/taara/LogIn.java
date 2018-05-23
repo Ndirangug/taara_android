@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.taara.android.taara.custom_objects.User;
 
 public class LogIn extends AppCompatActivity {
@@ -14,6 +16,8 @@ public class LogIn extends AppCompatActivity {
     private static final String TAG = "LogIn";
     EditText mEmailOrPhone;
     EditText mPassword;
+    FirebaseAuth mAuth;
+    FirebaseUser user;
 
 
     @Override
@@ -21,6 +25,13 @@ public class LogIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser();
+
+        if (!(user == null)) {
+            Intent intent = new Intent(getApplicationContext(), AccountInformation.class);
+            startActivity(intent);
+        }
         mEmailOrPhone = findViewById(R.id.edtEmailLogIn);
         mPassword = findViewById(R.id.edtPasswordLogin);
     }
@@ -29,11 +40,12 @@ public class LogIn extends AppCompatActivity {
         //executes log in and proceeds to AccountInfo.java
         final User user = new User(getApplicationContext());
         user.logIn(mEmailOrPhone.getText().toString(), mPassword.getText().toString());
+        //TODO:PROGRESS ANIMATION
         Thread delay = new Thread() {
             @Override
             public void run() {
                 try {
-                    sleep(2000);
+                    sleep(4000);
                     if (user.getLogIn()) {
                         Log.i(TAG, "Log in successfull  ");
                         Intent intent = new Intent(getApplicationContext(), AccountInformation.class);

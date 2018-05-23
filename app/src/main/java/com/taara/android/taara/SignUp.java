@@ -29,7 +29,7 @@ public class SignUp extends AppCompatActivity {
         //handler for 'SIGN UP' button
         User user = new User(getApplicationContext());
         user.signUpEmailPassword(mFirstName.getText().toString(), mSecondName.getText().toString(), mPhone.getText().toString(), mEmail.getText().toString(), mPassword.getText().toString());
-
+        //TODO:PROGRESS ANIMATION
 
     }
 

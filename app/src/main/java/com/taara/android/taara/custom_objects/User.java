@@ -176,7 +176,7 @@ public class User {
 
                         } else {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(context, "Sign Up Failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Sign Up Failed" + task.getException().toString(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
