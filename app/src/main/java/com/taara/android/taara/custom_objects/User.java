@@ -39,17 +39,7 @@ public class User {
         this.context = context;
     }
 
-    Thread delay = new Thread() {
-        @Override
-        public void run() {
-            try {
-                sleep(2000);
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    };
 
     public Boolean getLogIn() {
         return logIn;

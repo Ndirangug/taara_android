@@ -42,14 +42,13 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.taara.android.taara.R;
-import com.taara.android.taara.barcodereader.ui.camera.CameraSource;
-import com.taara.android.taara.barcodereader.ui.camera.CameraSourcePreview;
-
-import com.taara.android.taara.barcodereader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.taara.android.taara.R;
+import com.taara.android.taara.barcodereader.ui.camera.CameraSource;
+import com.taara.android.taara.barcodereader.ui.camera.CameraSourcePreview;
+import com.taara.android.taara.barcodereader.ui.camera.GraphicOverlay;
 
 import java.io.IOException;
 
@@ -68,6 +67,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
     // constants used to pass extra data in the intent
+
     public static final String AutoFocus = "AutoFocus";
     public static final String UseFlash = "UseFlash";
     public static final String BarcodeObject = "Barcode";
@@ -80,6 +80,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
 
+    public Context mContext;
+
+
+
     /**
      * Initializes the UI and creates the detector pipeline.
      */
@@ -88,8 +92,9 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         super.onCreate(icicle);
         setContentView(R.layout.barcode_capture);
 
+        mContext = getApplicationContext();
         mPreview =  findViewById(R.id.preview);
-        mGraphicOverlay = ( findViewById(R.id.graphicOverlay));
+        mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
 
         // read parameters from the intent used to launch the activity.
         boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
@@ -107,7 +112,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
+        Snackbar.make(mGraphicOverlay, "Stretch/Pinch to zoom",
                 Snackbar.LENGTH_LONG)
                 .show();
     }
@@ -278,7 +283,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Camera permission granted - initialize the camera source");
             // we have permission, so create the camerasource
-            boolean autoFocus = getIntent().getBooleanExtra(AutoFocus,false);
+            boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, true);
             boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
             createCameraSource(autoFocus, useFlash);
             return;
@@ -433,5 +438,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     @Override
     public void onBarcodeDetected(Barcode barcode) {
         //do something with barcode data returned
+        Intent data = new Intent();
+        data.putExtra(BarcodeObject, barcode);
+        setResult(CommonStatusCodes.SUCCESS, data);
+        finish();
+
+
     }
 }

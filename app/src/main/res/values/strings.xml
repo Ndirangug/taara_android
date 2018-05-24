@@ -90,4 +90,8 @@
     <string name="barcode_success">Barcode read successfully</string>
     <string name="barcode_failure">No barcode captured</string>
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
+    <string name="back">Back</string>
+    <string name="back_icon">back icon</string>
+    <string name="scan_instructions">Focus the camera on the qr code and wait for it to be automatically detected.</string>
+    <string name="textview">TextView</string>
 </resources>

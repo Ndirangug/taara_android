@@ -12,7 +12,7 @@ import org.json.JSONException;
 
 public class RestApiCall {
 
-    final static String[] responseArray = new String[6];
+    final static String[] responseArray = new String[7];
     Context context;
     String url;
 

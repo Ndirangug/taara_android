@@ -18,10 +18,10 @@ package com.taara.android.taara.barcodereader;
 import android.content.Context;
 import android.support.annotation.UiThread;
 
-import com.taara.android.taara.barcodereader.ui.camera.GraphicOverlay;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.taara.android.taara.barcodereader.ui.camera.GraphicOverlay;
 
 /**
  * Generic tracker which is used for tracking or reading a barcode (and can really be used for
@@ -32,6 +32,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 public class BarcodeGraphicTracker extends Tracker<Barcode> {
     private GraphicOverlay<BarcodeGraphic> mOverlay;
     private BarcodeGraphic mGraphic;
+    private Context mContext;
 
     private BarcodeUpdateListener mBarcodeUpdateListener;
 
@@ -62,6 +63,7 @@ public class BarcodeGraphicTracker extends Tracker<Barcode> {
     public void onNewItem(int id, Barcode item) {
         mGraphic.setId(id);
         mBarcodeUpdateListener.onBarcodeDetected(item);
+
     }
 
     /**
