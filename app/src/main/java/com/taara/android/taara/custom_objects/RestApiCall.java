@@ -23,16 +23,17 @@ public class RestApiCall {
 
     public JsonArrayRequest makeJsonArrayRequest() {
 
-
+        Log.i("Barcode retrieve", "Json request instantiated");
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                Log.i("Barcode retrieve", "Inside request method");
                 Log.i("response", response.toString());
-
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         responseArray[i] = response.getString(i);
                         Log.i("response array", responseArray[i]);
+                        Log.i("Barcode retrieve", responseArray[i]);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -44,6 +45,7 @@ public class RestApiCall {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.i("response", error.toString());
+                        Log.i("Barcode error", error.toString());
                     }
                 });
         return jsonArrayRequest;
@@ -51,6 +53,7 @@ public class RestApiCall {
 
     public String[] getResponseArray() {
         Log.i("API response ", responseArray[0] + responseArray[1]);
+        Log.i("Barcode ", responseArray[0] + responseArray[1]);
         return responseArray;
     }
 }

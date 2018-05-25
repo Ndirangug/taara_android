@@ -7,7 +7,7 @@
     <string name="start_shopping">Start Shopping</string>
     <string name="taara_string_splash_screen_logo">Taara @string/splash_screen_logo</string>
     <string name="email">Email</string>
-    <string name="cart">CART</string>
+    <string name="cart">Cart</string>
     <string name="password">Password</string>
     <string name="log_in">LOG IN</string>
     <string name="facebook">Facebook</string>
@@ -59,7 +59,6 @@
     <string name="go_on">GO ON ANYWAY</string>
     <string name="confirm_payment_of_kshs">Confirm Payment of kshs</string>
     <string name="_130000">130000</string>
-    <string name="kshs">Kshs  </string>
     <string name="_16">16%</string>
     <string name="unit_price">Unit Price:</string>
     <string name="title_activity_account_information">AccountInformation</string>
@@ -94,4 +93,11 @@
     <string name="back_icon">back icon</string>
     <string name="scan_instructions">Focus the camera on the qr code and wait for it to be automatically detected.</string>
     <string name="textview">TextView</string>
+    <string name="description_description_description_description_description">description description description description description</string>
+    <string name="kshs">Kshs</string>
+    <string name="subtotal">SubTotal</string>
+    <string name="kshs_34543">Kshs 34543</string>
+    <string name="service_charge_label">Service Charge(0.5%)</string>
+    <string name="kshs_34715_715">Kshs 34715.715</string>
+    <string name="kshs_172_715">Kshs 172.715</string>
 </resources>

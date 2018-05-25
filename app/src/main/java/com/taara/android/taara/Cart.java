@@ -19,8 +19,12 @@ package com.taara.android.taara;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -37,9 +41,21 @@ import com.taara.android.taara.custom_objects.RestApiCall;
  */
 public class Cart extends Activity implements View.OnClickListener {
 
+    private static final double SERVICE_CHARGE_RATE = 0.005;
+    static double amtSubtotal = 0;
+    static double amtServiceCharge = 0;
+    static double amtTotal = 0;
+    RecyclerView cartRecycler;
+    CartAdapter cartAdapter;
+    TextView txtsubtotal;
+    TextView txtserviceCharge;
+    TextView txtTotal;
+    Button btnCheckout;
+
 
     static String[] retrievedResult;
-    TextView storeId;
+    //static String[] bookedResult;
+    String storeId = "2";
     private String statusMessage;
     private static final int RC_BARCODE_CAPTURE = 9001;
     private static final String TAG = "BarcodeMain";
@@ -49,9 +65,20 @@ public class Cart extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+        txtserviceCharge = findViewById(R.id.amountServiceCharge);
+        txtsubtotal = findViewById(R.id.amountSubTotal);
+        txtTotal = findViewById(R.id.amountTotal);
+        btnCheckout = findViewById(R.id.cartCheckout);
+        txtsubtotal.setText("0.00");
+        txtserviceCharge.setText("0.00");
+        txtTotal.setText("0.00");
+        cartAdapter = new CartAdapter();
 
-        storeId = findViewById(R.id.storeId);
-        storeId.setText("2");
+        cartRecycler = findViewById(R.id.cartRecycler);
+        cartRecycler.setHasFixedSize(true);
+        cartRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        cartRecycler.setAdapter(cartAdapter);
+
         findViewById(R.id.read_barcode).setOnClickListener(this);
     }
 
@@ -104,18 +131,42 @@ public class Cart extends Activity implements View.OnClickListener {
                     statusMessage = getResources().getString(R.string.barcode_success);
                     barcodeValue = barcode.displayValue;
                     Log.i(TAG, "Barcode read: " + statusMessage + ", " + barcodeValue);
-                    retrieveProductOcuurence(barcodeValue, storeId.getText().toString());
+                    retrieveProductOcuurence(barcodeValue, storeId);
+                    Log.i(TAG + "retrieve", "attempetd retrieve");
 
                     Thread delay = new Thread() {
+
                         @Override
                         public void run() {
+
                             try {
-                                sleep(2000);
+                                sleep(2500);
                                 String[] item = retrievedResult;
                                 Log.i(TAG + ":extract", retrievedResult[0] + " " + retrievedResult[2] + " " + retrievedResult[5]);
+                                String[] itemDetails = {retrievedResult[5], retrievedResult[6], retrievedResult[2]};
+                                amtSubtotal += Integer.parseInt(retrievedResult[2]);
+                                amtServiceCharge += SERVICE_CHARGE_RATE * amtSubtotal;
+                                amtTotal += (amtSubtotal + amtServiceCharge);
+                                cartAdapter.addItem(itemDetails);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        cartRecycler.setAdapter(cartAdapter);
+                                        txtsubtotal.setText(String.valueOf(amtSubtotal));
+                                        txtserviceCharge.setText(String.valueOf(amtServiceCharge));
+                                        txtTotal.setText(String.valueOf(amtTotal));
+
+                                    }
+                                });
 
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
+                            } catch (NullPointerException e) {
+                                e.printStackTrace();
+                                Snackbar.make(txtserviceCharge.getRootView(), "Error:321 Item details retrieval failed.Check your connection and try again", Snackbar.LENGTH_LONG).show();
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                                Snackbar.make(txtserviceCharge.getRootView(), "Error:343 Item details retrieval failed.check your connection and try again", Snackbar.LENGTH_LONG).show();
                             }
 
                         }
@@ -139,17 +190,23 @@ public class Cart extends Activity implements View.OnClickListener {
     }
 
     public void retrieveProductOcuurence(String qrCode, String storeId) {
+        Log.i(TAG + "retrieve", "started");
         final Boolean[] complete = {false};
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         String url = "http://192.168.43.82/taaraBackend/?android_api_call=retrieveProductOccurrence&rfid=" + qrCode + "&storeID=" + storeId;
-        //TODO:book item
+        //String urlBook = "http://192.168.43.82/taaraBackend/?android_api_call=markItemBooked&rfid=" + qrCode + "&storeID=" + storeId;
         final RestApiCall restApiCall = new RestApiCall(getApplicationContext(), url);
+        //final RestApiCall restApiCall1Book = new RestApiCall(getApplicationContext(), urlBook);
         queue.add(restApiCall.makeJsonArrayRequest());
+        //queue.add(restApiCall1Book.makeJsonArrayRequest());
+        Log.i(TAG + "retrieve", "listener starting");
         RequestQueue.RequestFinishedListener requestFinishedListener = new RequestQueue.RequestFinishedListener() {
             @Override
             public void onRequestFinished(Request request) {
                 retrievedResult = restApiCall.getResponseArray();
+                //bookedResult = restApiCall1Book.getResponseArray();
                 Log.i(TAG + "oncom", retrievedResult[0] + retrievedResult[5]);
+                //Log.i(TAG+"booked:", "result"+bookedResult[0]);
                 complete[0] = true;
             }
         };
