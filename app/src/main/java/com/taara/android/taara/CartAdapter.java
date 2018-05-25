@@ -12,14 +12,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     index 1 => description
     index 2 => price*/
 
-    static String[][] itemDetails = new String[40][40];
+    static String[][] itemDetails = new String[40][4];
 
     public CartAdapter() {
 
     }
 
+
     public void addItem(String[] item) {
         itemDetails[getItemCount()] = item;
+    }
+
+
+    public void removeFromCart(String rfid) {
+        for (int i = 0; i < itemDetails.length; i++) {
+            if (itemDetails[i][3].equals(rfid)) {
+                itemDetails[i][0] = null;
+                break;
+            }
+        }
     }
 
     @Override
@@ -36,15 +47,22 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         viewHolder.title.setText(itemDetails[i][0]);
         viewHolder.price.setText(itemDetails[i][2]);
         viewHolder.description.setText(itemDetails[i][1]);
+
     }
 
     @Override
     public int getItemCount() {
         int number = 0;
+        int empty = 0;
         for (int i = 0; i < itemDetails.length; i++) {
             try {
                 if (!itemDetails[i][0].equals(null)) {
                     number++;
+                } else {
+//                    empty += 1;
+//                    if (empty > 20){
+//                        break;
+//                    }
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -62,12 +80,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         TextView price;
         TextView description;
 
+
         public ViewHolder(CardView card) {
             super(card);
             cardView = card;
             title = card.findViewById(R.id.item_title);
             price = card.findViewById(R.id.txtUnitPrice);
             description = card.findViewById(R.id.descriptionItem);
+
+
         }
     }
 }

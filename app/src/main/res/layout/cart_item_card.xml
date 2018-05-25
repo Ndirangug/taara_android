@@ -70,7 +70,7 @@
             android:id="@+id/removeItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="removeItem"
+            android:onClick="onClick"
             android:text="@string/remove"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -35,6 +35,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.taara.android.taara.barcodereader.BarcodeCaptureActivity;
 import com.taara.android.taara.custom_objects.RestApiCall;
 
+
 /**
  * Main activity demonstrating how to pass extra parameters to an activity that
  * reads barcodes.
@@ -51,6 +52,7 @@ public class Cart extends Activity implements View.OnClickListener {
     TextView txtserviceCharge;
     TextView txtTotal;
     Button btnCheckout;
+    private static final int REMOVE_ITEM_FROM_CART = 9002;
 
 
     static String[] retrievedResult;
@@ -58,8 +60,10 @@ public class Cart extends Activity implements View.OnClickListener {
     String storeId = "2";
     private String statusMessage;
     private static final int RC_BARCODE_CAPTURE = 9001;
+    String rfIdtoRemove;
     private static final String TAG = "BarcodeMain";
     private String barcodeValue;
+    double toSubtract;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +77,6 @@ public class Cart extends Activity implements View.OnClickListener {
         txtserviceCharge.setText("0.00");
         txtTotal.setText("0.00");
         cartAdapter = new CartAdapter();
-
         cartRecycler = findViewById(R.id.cartRecycler);
         cartRecycler.setHasFixedSize(true);
         cartRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -96,6 +99,17 @@ public class Cart extends Activity implements View.OnClickListener {
             intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
 
             startActivityForResult(intent, RC_BARCODE_CAPTURE);
+        }
+        if (v.getId() == R.id.removeItem) {
+            //capture rfid from barcode to remove it from cart
+            Intent intent = new Intent(this, BarcodeCaptureActivity.class);
+            intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+            intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+            startActivityForResult(intent, REMOVE_ITEM_FROM_CART);
+            Log.i(TAG + "return", "value: " + barcodeValue);
+            TextView price = findViewById(R.id.txtUnitPrice);
+            toSubtract = Double.parseDouble(price.getText().toString());
+
         }
 
     }
@@ -121,6 +135,8 @@ public class Cart extends Activity implements View.OnClickListener {
      * @see #startActivityForResult
      * @see #createPendingResult
      * @see #setResult(int)
+     *
+     *
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,10 +159,10 @@ public class Cart extends Activity implements View.OnClickListener {
                                 sleep(2500);
                                 String[] item = retrievedResult;
                                 Log.i(TAG + ":extract", retrievedResult[0] + " " + retrievedResult[2] + " " + retrievedResult[5]);
-                                String[] itemDetails = {retrievedResult[5], retrievedResult[6], retrievedResult[2]};
+                                String[] itemDetails = {retrievedResult[5], retrievedResult[6], retrievedResult[2], retrievedResult[3]};
                                 amtSubtotal += Integer.parseInt(retrievedResult[2]);
-                                amtServiceCharge += SERVICE_CHARGE_RATE * amtSubtotal;
-                                amtTotal += (amtSubtotal + amtServiceCharge);
+                                amtServiceCharge = Math.round((SERVICE_CHARGE_RATE * amtSubtotal) * 100.0) / 100.0;
+                                amtTotal = (amtSubtotal + amtServiceCharge);
                                 cartAdapter.addItem(itemDetails);
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -184,8 +200,51 @@ public class Cart extends Activity implements View.OnClickListener {
                         CommonStatusCodes.getStatusCodeString(resultCode)));
             }
         }
+
         else {
-            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == REMOVE_ITEM_FROM_CART) {
+                if (resultCode == CommonStatusCodes.SUCCESS) {
+
+                    if (data != null) {
+                        try {
+                            Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                            statusMessage = getResources().getString(R.string.barcode_success);
+                            barcodeValue = barcode.displayValue;
+                            Log.i(TAG + "remove", "Barcode read: " + statusMessage + ", " + barcodeValue);
+                            cartAdapter.removeFromCart(barcodeValue);
+                            Log.i(TAG + "sub", "Preparing to remove");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Log.i(TAG + "sub", "Now removing");
+                                    amtSubtotal -= toSubtract;
+                                    amtServiceCharge = Math.round((SERVICE_CHARGE_RATE * amtSubtotal) * 100.0) / 100.0;
+                                    amtTotal = (amtSubtotal + amtServiceCharge);
+                                    txtsubtotal.setText(String.valueOf(amtSubtotal));
+                                    txtserviceCharge.setText(String.valueOf(amtServiceCharge));
+                                    txtTotal.setText(String.valueOf(amtTotal));
+                                    cartRecycler.setAdapter(cartAdapter);
+
+                                }
+                            });
+                        } catch (RuntimeException e) {
+                            e.printStackTrace();
+                            Snackbar.make(btnCheckout.getRootView(), "Not returned vale " + e.toString(), Snackbar.LENGTH_INDEFINITE).show();
+                        }
+                    } else {
+                        statusMessage = getResources().getString(R.string.barcode_failure);
+                        Log.i(TAG, "No barcode captured, intent data is null " + statusMessage);
+                    }
+
+                } else {
+                    statusMessage = (String.format(getString(R.string.barcode_error),
+                            CommonStatusCodes.getStatusCodeString(resultCode)));
+                    Log.i(TAG, "Result not success " + statusMessage);
+                }
+
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
@@ -217,4 +276,6 @@ public class Cart extends Activity implements View.OnClickListener {
         }
 
     }
+
+
 }
