@@ -1,5 +1,6 @@
 package com.taara.android.taara;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,16 +9,22 @@ import android.widget.TextView;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
+    static int offset = 0;
+    static String[][] itemDetails = new String[40][5];
     /*index 0 => title
     index 1 => description
-    index 2 => price*/
+    index 2 => price
+    index 3 => rfid
+    index 4 => VAT*/
+    Context mContext;
 
-    static String[][] itemDetails = new String[40][4];
-
-    public CartAdapter() {
-
+    public CartAdapter(Context context) {
+        mContext = context;
     }
 
+    public String[][] getItemDetails() {
+        return itemDetails;
+    }
 
     public void addItem(String[] item) {
         itemDetails[getItemCount()] = item;
@@ -26,11 +33,31 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     public void removeFromCart(String rfid) {
         for (int i = 0; i < itemDetails.length; i++) {
-            if (itemDetails[i][3].equals(rfid)) {
-                itemDetails[i][0] = null;
-                break;
+            try {
+
+
+                if (itemDetails[i][3].equals(rfid)) {
+                    while (!itemDetails[i + 1][0].equals(null) && i <= getItemCount()) {
+                        itemDetails[i][0] = itemDetails[i + 1][0];
+                        itemDetails[i + 1][0] = null;
+                        itemDetails[i][1] = itemDetails[i + 1][1];
+                        itemDetails[i + 1][1] = null;
+                        itemDetails[i][2] = itemDetails[i + 1][2];
+                        itemDetails[i + 1][2] = null;
+                        itemDetails[i][3] = itemDetails[i + 1][3];
+                        itemDetails[i + 1][3] = null;
+
+                        i++;
+                    }
+
+                    break;
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+
             }
         }
+
     }
 
     @Override

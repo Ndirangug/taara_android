@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CheckoutSummary">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/checkoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/cardview_light_background">
+
+        <ImageView
+            android:id="@+id/checkoutSummaryBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/back_icon"
+            android:src="?attr/actionModeCloseDrawable"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <TextView
+            android:id="@+id/titleCheckoutSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/checkout_summary"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="59dp"
+            tools:layout_editor_absoluteY="11dp" />
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/lblSubTotalSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/subtotal"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/amtSubtotalSummary"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkoutToolbar" />
+
+    <TextView
+        android:id="@+id/amtSubtotalSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/kshs_0_00"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblSubTotalSummary"
+        app:layout_constraintTop_toBottomOf="@+id/checkoutToolbar" />
+
+    <TextView
+        android:id="@+id/lblServiceChargeCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/service_charge_label"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/amtServiceChargeCheckout"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblSubTotalSummary" />
+
+    <TextView
+        android:id="@+id/amtServiceChargeCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/kshs_0_00"
+        android:textAlignment="textEnd"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toEndOf="@+id/lblServiceChargeCheckout"
+        app:layout_constraintTop_toBottomOf="@+id/amtSubtotalSummary" />
+
+    <TextView
+        android:id="@+id/lblVatCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/vat"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/amtVatCheckout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblServiceChargeCheckout" />
+
+    <TextView
+        android:id="@+id/amtVatCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="23dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/_16"
+        android:textAlignment="textEnd"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblVatCheckout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lblVatCheckout" />
+
+    <TextView
+        android:id="@+id/lblTotalCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/total"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/amtCheckoutTotal"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblVatCheckout" />
+
+    <TextView
+        android:id="@+id/amtCheckoutTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/kshs_0_00"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblTotalCheckout"
+        app:layout_constraintTop_toBottomOf="@+id/amtVatCheckout" />
+
+    <TextView
+        android:id="@+id/lblPhoneCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="52dp"
+        android:text="@string/phone"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/edtPhoneCheckout"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblTotalCheckout" />
+
+    <EditText
+        android:id="@+id/edtPhoneCheckout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/change_if_not_correct"
+        android:inputType="phone"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblPhoneCheckout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblPhoneCheckout"
+        app:layout_constraintTop_toTopOf="@+id/lblPhoneCheckout"
+        app:layout_constraintVertical_bias="0.428" />
+
+    <Button
+        android:id="@+id/btnProceedPay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="onClick"
+        android:text="@string/proceed_to_payment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtPhoneCheckout" />
+</android.support.constraint.ConstraintLayout>

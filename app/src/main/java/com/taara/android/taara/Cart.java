@@ -17,9 +17,12 @@
 package com.taara.android.taara;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -54,13 +57,14 @@ public class Cart extends Activity implements View.OnClickListener {
     Button btnCheckout;
     private static final int REMOVE_ITEM_FROM_CART = 9002;
 
-
+    public static String[][] cartItems;
     static String[] retrievedResult;
     //static String[] bookedResult;
-    String storeId = "2";
+    String storeName;
+    String storeTillNo;
+    String storeId;
     private String statusMessage;
     private static final int RC_BARCODE_CAPTURE = 9001;
-    String rfIdtoRemove;
     private static final String TAG = "BarcodeMain";
     private String barcodeValue;
     double toSubtract;
@@ -69,6 +73,15 @@ public class Cart extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+        SharedPreferences sharedPreferences = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
+        storeId = sharedPreferences.getString("STORE_ID", "0");
+        storeName = sharedPreferences.getString("STORE_NAME", "0");
+        storeTillNo = sharedPreferences.getString("MPESA_TILL_NO", "0");
+        Log.i("STORE", "id =" + storeId);
+        if (storeId.equals("0")) {
+            Snackbar.make(cartRecycler, "CHECK IN WAS UNSUCCESSFUL.GO BACK AND TRY AGAIN", Snackbar.LENGTH_SHORT).show();
+
+        }
         txtserviceCharge = findViewById(R.id.amountServiceCharge);
         txtsubtotal = findViewById(R.id.amountSubTotal);
         txtTotal = findViewById(R.id.amountTotal);
@@ -76,14 +89,19 @@ public class Cart extends Activity implements View.OnClickListener {
         txtsubtotal.setText("0.00");
         txtserviceCharge.setText("0.00");
         txtTotal.setText("0.00");
-        cartAdapter = new CartAdapter();
+        cartAdapter = new CartAdapter(getApplicationContext());
         cartRecycler = findViewById(R.id.cartRecycler);
         cartRecycler.setHasFixedSize(true);
         cartRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         cartRecycler.setAdapter(cartAdapter);
 
+        Snackbar.make(cartRecycler.getRootView(), "Successfully checked in to " + storeName, Snackbar.LENGTH_LONG).show();
+
         findViewById(R.id.read_barcode).setOnClickListener(this);
+
+
     }
+
 
     /**
      * Called when a view has been clicked.
@@ -102,14 +120,29 @@ public class Cart extends Activity implements View.OnClickListener {
         }
         if (v.getId() == R.id.removeItem) {
             //capture rfid from barcode to remove it from cart
-            Intent intent = new Intent(this, BarcodeCaptureActivity.class);
-            intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
-            intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
-            startActivityForResult(intent, REMOVE_ITEM_FROM_CART);
+            //int positon = cartRecycler.getChildAdapterPosition(v);
             Log.i(TAG + "return", "value: " + barcodeValue);
-            TextView price = findViewById(R.id.txtUnitPrice);
+            CardView cardView = (CardView) v.getParent().getParent();
+            CartAdapter.ViewHolder viewHolder = (CartAdapter.ViewHolder) cartRecycler.getChildViewHolder(cardView);
+            TextView price = viewHolder.price;
             toSubtract = Double.parseDouble(price.getText().toString());
-
+            if (cartRecycler.getChildCount() > 1) {
+                Intent intent = new Intent(this, BarcodeCaptureActivity.class);
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+                startActivityForResult(intent, REMOVE_ITEM_FROM_CART);
+            } else {
+                toSubtract = 0;
+                Snackbar.make(cartRecycler, "Cart cannot be empty.Add another item to remove this one", Snackbar.LENGTH_LONG).show();
+            }
+        }
+        if (v.getId() == R.id.cartCheckout) {
+            cartItems = CartAdapter.itemDetails;
+            Intent intent = new Intent(getApplicationContext(), CheckoutSummary.class);
+            String[][] cartItems = cartAdapter.getItemDetails();
+            intent.putExtra("cart_items", cartItems);
+            intent.putExtra("STORE_ID", storeId);
+            startActivity(intent);
         }
 
     }
@@ -156,10 +189,10 @@ public class Cart extends Activity implements View.OnClickListener {
                         public void run() {
 
                             try {
-                                sleep(2500);
+                                sleep(3500);
                                 String[] item = retrievedResult;
                                 Log.i(TAG + ":extract", retrievedResult[0] + " " + retrievedResult[2] + " " + retrievedResult[5]);
-                                String[] itemDetails = {retrievedResult[5], retrievedResult[6], retrievedResult[2], retrievedResult[3]};
+                                String[] itemDetails = {retrievedResult[5], retrievedResult[6], retrievedResult[2], retrievedResult[3], retrievedResult[4]};
                                 amtSubtotal += Integer.parseInt(retrievedResult[2]);
                                 amtServiceCharge = Math.round((SERVICE_CHARGE_RATE * amtSubtotal) * 100.0) / 100.0;
                                 amtTotal = (amtSubtotal + amtServiceCharge);
@@ -179,10 +212,10 @@ public class Cart extends Activity implements View.OnClickListener {
                                 e.printStackTrace();
                             } catch (NullPointerException e) {
                                 e.printStackTrace();
-                                Snackbar.make(txtserviceCharge.getRootView(), "Error:321 Item details retrieval failed.Check your connection and try again", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(txtserviceCharge.getRootView(), "Error:321 Item details retrieval failed.", Snackbar.LENGTH_LONG).show();
                             } catch (NumberFormatException e) {
                                 e.printStackTrace();
-                                Snackbar.make(txtserviceCharge.getRootView(), "Error:343 Item details retrieval failed.check your connection and try again", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(txtserviceCharge.getRootView(), "Error:343 Item details retrieval failed.", Snackbar.LENGTH_LONG).show();
                             }
 
                         }
@@ -225,6 +258,7 @@ public class Cart extends Activity implements View.OnClickListener {
                                     txtTotal.setText(String.valueOf(amtTotal));
                                     cartRecycler.setAdapter(cartAdapter);
 
+
                                 }
                             });
                         } catch (RuntimeException e) {
@@ -252,7 +286,7 @@ public class Cart extends Activity implements View.OnClickListener {
         Log.i(TAG + "retrieve", "started");
         final Boolean[] complete = {false};
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "http://192.168.43.82/taaraBackend/?android_api_call=retrieveProductOccurrence&rfid=" + qrCode + "&storeID=" + storeId;
+        String url = getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=retrieveProductOccurrence&rfid=" + qrCode + "&storeID=" + storeId;
         //String urlBook = "http://192.168.43.82/taaraBackend/?android_api_call=markItemBooked&rfid=" + qrCode + "&storeID=" + storeId;
         final RestApiCall restApiCall = new RestApiCall(getApplicationContext(), url);
         //final RestApiCall restApiCall1Book = new RestApiCall(getApplicationContext(), urlBook);

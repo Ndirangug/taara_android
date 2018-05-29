@@ -3,7 +3,7 @@
     package="com.taara.android.taara">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <meta-data
         android:name="com.google.firebase.ml.vision.DEPENDENCIES"
@@ -29,9 +29,11 @@
             android:name=".AccountInformation"
             android:label="@string/title_activity_account_information"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ScanQr"></activity>
+        <activity android:name=".ScanQr" />
         <activity android:name=".Cart" />
         <activity android:name=".barcodereader.BarcodeCaptureActivity" />
+        <activity android:name=".CheckoutSummary" />
+        <activity android:name=".IpayGateway"></activity>
     </application>
 
 </manifest>

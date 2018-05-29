@@ -40,8 +40,10 @@ public class AccountInformation extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startShopping = new Intent(getApplicationContext(), Cart.class);
-                startActivity(startShopping);
+                CheckInDialogFragment checkInDialogFragment = new CheckInDialogFragment();
+                checkInDialogFragment.show(getSupportFragmentManager(), "CHECK_IM");
+
+
             }
         });
 

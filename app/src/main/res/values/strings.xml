@@ -100,4 +100,12 @@
     <string name="service_charge_label">Service Charge(0.5%)</string>
     <string name="kshs_34715_715">Kshs 34715.715</string>
     <string name="kshs_172_715">Kshs 172.715</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="waiting">Waiting...</string>
+    <string name="host">http://artscircle.co.ke</string>
+    <string name="checkout_summary">SUMMARY</string>
+    <string name="kshs_0_00">Kshs 0.00</string>
+    <string name="change_if_not_correct">Change if not correct</string>
+    <string name="proceed_to_payment">Proceed To Payment</string>
+    <string name="payment">PAYMENT</string>
 </resources>

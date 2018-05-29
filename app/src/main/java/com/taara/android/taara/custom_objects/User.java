@@ -16,6 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.taara.android.taara.LogIn;
+import com.taara.android.taara.R;
 
 import static com.android.volley.VolleyLog.TAG;
 
@@ -62,7 +63,7 @@ public class User {
 
            final String[] responseArray = new String[6];
            queue = Volley.newRequestQueue(this.context);
-           String url = "http://192.168.43.82/taaraBackend/?android_api_call=retrieveUserWithEmail&email=" + this.email;
+           String url = context.getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=retrieveUserWithEmail&email=" + this.email;
            restApiCall = new RestApiCall(context, url);
            queue.add(restApiCall.makeJsonArrayRequest());
 
@@ -73,7 +74,7 @@ public class User {
            //api call to retrieve user details with phone and use retrieved email to sign in
            final String[] responseArray = new String[6];
            queue = Volley.newRequestQueue(this.context);
-           String url = "http://192.168.43.82/taaraBackend/?android_api_call=retrieveUserWithPhone&phone=" + this.phoneNumber;
+           String url = context.getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=retrieveUserWithPhone&phone=" + this.phoneNumber;
 
            restApiCall = new RestApiCall(context, url);
            queue.add(restApiCall.makeJsonArrayRequest());
@@ -146,7 +147,7 @@ public class User {
                             Log.i(TAG, "firebase sign up successful");
                             //write firstName, secondName, Phone, Email to remote db
                             final RequestQueue queue = Volley.newRequestQueue(context);
-                            String url = "http://192.168.43.82/taaraBackend/?android_api_call=createNewUser&firstName=" + firstName + "&secondName=" + secondName + "&phone=" + phoneNumber + "&email=" + email;
+                            String url = context.getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=createNewUser&firstName=" + firstName + "&secondName=" + secondName + "&phone=" + phoneNumber + "&email=" + email;
 
                             RestApiCall restApiCall = new RestApiCall(context, url);
                             queue.add(restApiCall.makeJsonArrayRequest());
