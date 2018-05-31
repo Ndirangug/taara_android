@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,14 +25,36 @@ public class AccountInformation extends AppCompatActivity
     FirebaseAuth mAuth;
     int mBackPressedCounter;
 
+    TextView txtfullname, txtEmail;
+    String mFullName, mEmail;
+    SharedPreferences sharedPreferences;
+    NavigationView navigationView;
+    FloatingActionButton floatingActionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_information);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        navigationView = findViewById(R.id.nav_view);
+        sharedPreferences = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
+//        mFullName = sharedPreferences.getString("FIRST_NAME", null)+" "+sharedPreferences.getString("SECOND_NAME", null);
+//        mEmail = sharedPreferences.getString("EMAIL", null);
+        txtfullname = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name_full);
+        txtEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_account_info);
+        floatingActionButton = navigationView.getHeaderView(0).findViewById(R.id.editProfile);
+//        txtfullname.setText(mFullName);
+//        txtEmail.setText(mEmail);
         mAuth = FirebaseAuth.getInstance();
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditProfileDialog editProfileDialog = new EditProfileDialog();
+                editProfileDialog.show(getSupportFragmentManager(), "EDIT_PROFILE");
+            }
+        });
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
@@ -105,7 +129,21 @@ public class AccountInformation extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_help) {
+            Intent intent = new Intent(getApplicationContext(), HelpAndFeedback.class);
+            startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_exit) {
+            finishAffinity();
+            return true;
+        }
+
+        if (id == R.id.action_logout) {
+            mAuth.signOut();
+            Intent intent = new Intent(getApplicationContext(), LogIn.class);
+            startActivity(intent);
             return true;
         }
 
@@ -118,34 +156,47 @@ public class AccountInformation extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_feedback) {
+            Intent intent = new Intent(getApplicationContext(), HelpAndFeedback.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_about) {
+            Intent intent = new Intent(getApplicationContext(), About.class);
+            startActivity(intent);
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_logout) {
+            mAuth.signOut();
+            Intent intent = new Intent(getApplicationContext(), LogIn.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
+            String playStoreUrl = "https://play.google.com/taara";
+            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, playStoreUrl);
+            String title = getResources().getString(R.string.share_app);
+            Intent chooser = Intent.createChooser(sendIntent, title);
 
-        } else if (id == R.id.nav_send) {
+            if (sendIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(chooser);
+            } else {
+                Snackbar.make(navigationView, "Sorry.It seems you dont have a suitable sharing app", Snackbar.LENGTH_SHORT).show();
+            }
 
+        } else if (id == R.id.nav_exit) {
+            finishAffinity();
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void logOut(MenuItem item) {
-        mAuth.signOut();
-        Intent intent = new Intent(getApplicationContext(), LogIn.class);
-        startActivity(intent);
+
+    @Override
+    protected void onResume() {
+        mFullName = sharedPreferences.getString("FIRST_NAME", null) + " " + sharedPreferences.getString("SECOND_NAME", null);
+        mEmail = sharedPreferences.getString("EMAIL", null);
+        txtfullname.setText(mFullName);
+        txtEmail.setText(mEmail);
+        super.onResume();
     }
-
-    public void exit(MenuItem item) {
-        finishAffinity();
-    }
-
-
 }

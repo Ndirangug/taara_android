@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -63,7 +64,6 @@ public class Cart extends Activity implements View.OnClickListener {
     String storeName;
     String storeTillNo;
     String storeId;
-    private String statusMessage;
     private static final int RC_BARCODE_CAPTURE = 9001;
     private static final String TAG = "BarcodeMain";
     private String barcodeValue;
@@ -99,6 +99,13 @@ public class Cart extends Activity implements View.OnClickListener {
 
         findViewById(R.id.read_barcode).setOnClickListener(this);
 
+        ImageView btnBack = findViewById(R.id.cartBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
 
@@ -145,6 +152,10 @@ public class Cart extends Activity implements View.OnClickListener {
             startActivity(intent);
         }
 
+        if (v.getId() == R.id.cartBack) {
+            onBackPressed();
+        }
+
     }
 
     /**
@@ -173,6 +184,7 @@ public class Cart extends Activity implements View.OnClickListener {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String statusMessage;
         if (requestCode == RC_BARCODE_CAPTURE) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {

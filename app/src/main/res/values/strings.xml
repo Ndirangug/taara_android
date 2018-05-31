@@ -75,7 +75,7 @@
     <string name="prefrences">Prefrences</string>
     <string name="share">Share</string>
     <string name="exit">Exit</string>
-    <string name="feedback">Feedback</string>
+    <string name="feedback">Help and Feedback</string>
     <string name="contact_us">Contact us</string>
     <string name="about">About</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
@@ -108,4 +108,27 @@
     <string name="change_if_not_correct">Change if not correct</string>
     <string name="proceed_to_payment">Proceed To Payment</string>
     <string name="payment">PAYMENT</string>
+    <string name="update">UPDATE</string>
+    <string name="upate_profile">Update Profile</string>
+    <string name="version">Version 1.0.0</string>
+    <string name="facebook_page">Follow us on Facebook</string>
+    <string name="twitter_page">Follow us on Twitter</string>
+    <string name="copyright">2018 , Taara  All Rights Reserved</string>
+    <string name="fb_icon">Fb Icon</string>
+    <string name="twitter_icon">Twitter Icon</string>
+    <string name="talktous">TALK TO US</string>
+    <string name="subject">SUBJECT</string>
+    <string name="send">SEND</string>
+    <string name="message">Your message here...</string>
+    <string name="whatsapplink">Whatsapp Help Link</string>
+    <string name="facebooklink">Facebook Help link</string>
+    <string name="twitterlink">Twitter help Link</string>
+    <string name="youtubeink">Youtube Channel Link</string>
+    <string name="share_app">SHARE TAARA APP</string>
+    <string-array name="feedback_options">
+        <item>General Feedback</item>
+        <item>Help</item>
+        <item>Enquiries</item>
+    </string-array>
+
 </resources>

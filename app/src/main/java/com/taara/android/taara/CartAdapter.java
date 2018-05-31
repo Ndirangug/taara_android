@@ -16,9 +16,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     index 2 => price
     index 3 => rfid
     index 4 => VAT*/
-    Context mContext;
+    private Context mContext;
 
-    public CartAdapter(Context context) {
+    CartAdapter(Context context) {
         mContext = context;
     }
 
@@ -86,10 +86,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
                 if (!itemDetails[i][0].equals(null)) {
                     number++;
                 } else {
-//                    empty += 1;
-//                    if (empty > 20){
-//                        break;
-//                    }
+                    empty += 1;
+                    if (empty > 3) {
+                        break;
+                    }
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();

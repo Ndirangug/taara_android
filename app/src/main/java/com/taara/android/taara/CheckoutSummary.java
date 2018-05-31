@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 
 public class CheckoutSummary extends AppCompatActivity {
 
@@ -24,7 +23,7 @@ public class CheckoutSummary extends AppCompatActivity {
     String itemIds;
     Intent intent;
     SharedPreferences sharedPreferencesUserSession;
-    BigDecimal totalRounded, vatlRounded, subtotalRounded;
+    StringBuilder stringBuilder;
 
     String firstname, secondname, email, phone, storeId;
 
@@ -32,7 +31,7 @@ public class CheckoutSummary extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout_summary);
-
+        stringBuilder = new StringBuilder();
         intent = getIntent();
         storeId = intent.getStringExtra("STORE_ID");
         txtServiceCharge = findViewById(R.id.amtServiceChargeCheckout);
@@ -64,12 +63,13 @@ public class CheckoutSummary extends AppCompatActivity {
                 if (cartItems[i][4].equals("16")) {
                     vatTotal += VAT_RATE * Double.parseDouble(cartItems[i][2]);
                 }
-                itemIds += cartItems[i][3] + ",";
+                //itemIds += cartItems[i][3] + ",";
+                itemIds = stringBuilder.append(cartItems[i][3]).append(",").toString();
             }
 
             Log.i("rfids", itemIds);
             serviceCharge = SERVICE_CHARGE * subTotal;
-            BigDecimal serviceChargeRounded = BigDecimal.valueOf(serviceCharge).round(MathContext.DECIMAL64).setScale(2);
+            BigDecimal serviceChargeRounded = BigDecimal.valueOf(serviceCharge).setScale(2, BigDecimal.ROUND_HALF_UP);
             serviceCharge = Double.valueOf(String.valueOf(serviceChargeRounded));
             total = subTotal + vatTotal + serviceCharge;
 //             totalRounded = BigDecimal.valueOf(total).round(MathContext.DECIMAL64).setScale(2);
@@ -105,4 +105,7 @@ public class CheckoutSummary extends AppCompatActivity {
     }
 
 
+    public void back(View view) {
+        onBackPressed();
+    }
 }

@@ -1,8 +1,11 @@
 package com.taara.android.taara;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -28,10 +31,11 @@ public class IpayGateway extends AppCompatActivity {
         phone = intent.getStringExtra("PHONE");
         itemRfIds = intent.getStringExtra("RFIDS");
         storeId = intent.getStringExtra("STORE_ID");
+        String userId = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE).getString("USER_ID", "0");
         total = String.valueOf(intent.getDoubleExtra("TOTAL", 0));
 
-
-        url = getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=checkout&itemIds=" + itemRfIds + "&amount=" + total + "&phone=" + phone + "&email=" + email;
+        Log.i("rfids", itemRfIds);
+        url = getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=checkout&itemIds=" + itemRfIds + "&amount=" + total + "&phone=" + phone + "&email=" + email + "&userId=" + userId;
         WebView webView = findViewById(R.id.ipayGateway);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -42,5 +46,9 @@ public class IpayGateway extends AppCompatActivity {
         webView.loadUrl(url);
 
 
+    }
+
+    public void back(View view) {
+        onBackPressed();
     }
 }

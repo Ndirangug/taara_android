@@ -374,6 +374,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         return false;
     }
 
+    public void back(View view) {
+        onBackPressed();
+    }
+
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {

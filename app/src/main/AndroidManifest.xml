@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <meta-data
         android:name="com.google.firebase.ml.vision.DEPENDENCIES"
@@ -29,11 +31,12 @@
             android:name=".AccountInformation"
             android:label="@string/title_activity_account_information"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ScanQr" />
         <activity android:name=".Cart" />
         <activity android:name=".barcodereader.BarcodeCaptureActivity" />
         <activity android:name=".CheckoutSummary" />
-        <activity android:name=".IpayGateway"></activity>
+        <activity android:name=".IpayGateway" />
+        <activity android:name=".About" />
+        <activity android:name=".HelpAndFeedback"></activity>
     </application>
 
 </manifest>

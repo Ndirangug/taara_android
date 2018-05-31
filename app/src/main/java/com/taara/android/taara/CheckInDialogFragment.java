@@ -32,7 +32,6 @@ public class CheckInDialogFragment extends DialogFragment {
     ProgressBar progressBar;
     String scanResult = "Failed...try again";
     private int RC_BARCODE_CAPTURE = 9001;
-    private String storeId;
     private String[] retrievedResult;
 
     @NonNull
@@ -89,7 +88,7 @@ public class CheckInDialogFragment extends DialogFragment {
                     statusMessage = getResources().getString(R.string.barcode_success);
                     barcodeValue = barcode.displayValue;
                     Log.i(TAG, "Barcode read: " + statusMessage + ", " + barcodeValue);
-                    storeId = barcodeValue;
+                    String storeId = barcodeValue;
 
                     RequestQueue queue = Volley.newRequestQueue(getContext());
                     String url = getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=getStore&storeID=" + storeId;

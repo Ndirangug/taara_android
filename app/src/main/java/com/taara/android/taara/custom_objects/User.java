@@ -3,6 +3,8 @@ package com.taara.android.taara.custom_objects;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,10 +36,17 @@ public class User {
     Context context;
     Boolean logIn;
     Boolean signUp;
+    ConnectivityManager connectivityManager;
+    NetworkInfo networkInfo;
+    String userId;
 
 
     public User(Context context) {
         this.context = context;
+
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connectivityManager.getActiveNetworkInfo();
+
     }
 
 
@@ -72,15 +81,21 @@ public class User {
            //'phooeOrEmail' did not have an '@' and was therefore a phone number
            this.phoneNumber = phoneOrEmail;
            //api call to retrieve user details with phone and use retrieved email to sign in
-           final String[] responseArray = new String[6];
+           final String[] responseArray = new String[7];
            queue = Volley.newRequestQueue(this.context);
            String url = context.getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=retrieveUserWithPhone&phone=" + this.phoneNumber;
 
            restApiCall = new RestApiCall(context, url);
-           queue.add(restApiCall.makeJsonArrayRequest());
+           if (!(networkInfo == null)) {
+               queue.add(restApiCall.makeJsonArrayRequest());
+           } else {
+               Toast.makeText(context, "Check your connection and try again", Toast.LENGTH_LONG).show();
+           }
+
 
 
        }
+
         RequestQueue.RequestFinishedListener requestFinishedListener = new RequestQueue.RequestFinishedListener() {
             @Override
             public void onRequestFinished(Request request) {
@@ -92,6 +107,7 @@ public class User {
                     secondName = apiCallResult[2];
                     email = apiCallResult[3];
                     phoneNumber = apiCallResult[4];
+                    userId = apiCallResult[5];
 
                     Log.i("success", firstName + secondName + phoneNumber + "successfully retrieved");
 
@@ -110,6 +126,7 @@ public class User {
                                                 .putString("SECOND_NAME", secondName)
                                                 .putString("EMAIL", email)
                                                 .putString("PHONE", phoneNumber)
+                                                .putString("USER_ID", userId)
                                                 .commit();
                                         returnValue[0] = 1;
                                         logIn = true;
@@ -128,7 +145,13 @@ public class User {
                 }
             }
         };
-        queue.addRequestFinishedListener(requestFinishedListener);
+        if (!(networkInfo == null)) {
+            queue.addRequestFinishedListener(requestFinishedListener);
+        } else {
+            Toast.makeText(context, "Check your connection and try again", Toast.LENGTH_LONG).show();
+        }
+
+
 
 
         return returnValue[0];
@@ -157,7 +180,11 @@ public class User {
                                 public void onRequestFinished(Request request) {
 
                                     Intent logIn = new Intent(context, LogIn.class);
-                                    context.getApplicationContext().startActivity(logIn);
+                                    logIn.putExtra("EMAIL", email);
+                                    logIn.putExtra("PASSWORD", password);
+                                    logIn.putExtra("LOGIN", true);
+                                    logIn.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    context.startActivity(logIn);
                                     Toast.makeText(context, "SIGN UP SUCCESSFUL", Toast.LENGTH_LONG);
                                 }
                             };
