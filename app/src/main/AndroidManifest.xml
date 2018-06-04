@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <meta-data
         android:name="com.google.firebase.ml.vision.DEPENDENCIES"
         android:value="barcode" />
@@ -28,7 +27,7 @@
         <activity android:name=".LogIn" />
         <activity android:name=".SignUp" />
         <activity
-            android:name=".AccountInformation"
+            android:name=".RecentActivity"
             android:label="@string/title_activity_account_information"
             android:theme="@style/AppTheme" />
         <activity android:name=".Cart" />
@@ -36,7 +35,8 @@
         <activity android:name=".CheckoutSummary" />
         <activity android:name=".IpayGateway" />
         <activity android:name=".About" />
-        <activity android:name=".HelpAndFeedback"></activity>
+        <activity android:name=".HelpAndFeedback" />
+        <activity android:name=".Notifications" />
     </application>
 
 </manifest>

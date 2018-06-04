@@ -3,6 +3,8 @@ package com.taara.android.taara;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,40 +14,63 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.taara.android.taara.fragments.RecentsMasterFragment;
+import com.taara.android.taara.recents.RecentProductOccurrences;
 
-public class AccountInformation extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class RecentActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, EditProfileDialog.onProfileChangedListener, RecentsMasterFragment.OnListFragmentInteractionListener {
     FirebaseAuth mAuth;
     int mBackPressedCounter;
-
+    public static String USER_ID;
     TextView txtfullname, txtEmail;
     String mFullName, mEmail;
     SharedPreferences sharedPreferences;
     NavigationView navigationView;
     FloatingActionButton floatingActionButton;
+    public static boolean IS_CONNECTED;
+    WebView offersWebView;
+    ConnectivityManager connectivityManager;
+    NetworkInfo networkInfo;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account_information);
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (!(null == networkInfo)) {
+            IS_CONNECTED = true;
+
+        } else {
+            IS_CONNECTED = false;
+        }
+        setContentView(R.layout.activity_recent_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitle(getResources().getString(R.string.your_actvity));
+
+
         navigationView = findViewById(R.id.nav_view);
         sharedPreferences = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
-//        mFullName = sharedPreferences.getString("FIRST_NAME", null)+" "+sharedPreferences.getString("SECOND_NAME", null);
-//        mEmail = sharedPreferences.getString("EMAIL", null);
+
+        offersWebView = findViewById(R.id.offersWebView);
         txtfullname = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name_full);
         txtEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.email_account_info);
         floatingActionButton = navigationView.getHeaderView(0).findViewById(R.id.editProfile);
-//        txtfullname.setText(mFullName);
-//        txtEmail.setText(mEmail);
+        USER_ID = sharedPreferences.getString("USER_ID", "user id");
         mAuth = FirebaseAuth.getInstance();
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -60,16 +85,7 @@ public class AccountInformation extends AppCompatActivity
         SharedPreferences sharedPreferences = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
         Toast.makeText(getApplicationContext(), sharedPreferences.getString("FIRST_NAME", "default") + " logged in", Toast.LENGTH_LONG).show();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CheckInDialogFragment checkInDialogFragment = new CheckInDialogFragment();
-                checkInDialogFragment.show(getSupportFragmentManager(), "CHECK_IM");
 
-
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -79,6 +95,15 @@ public class AccountInformation extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        WebSettings webSettings = offersWebView.getSettings();
+        webSettings.setLoadsImagesAutomatically(true);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setAppCacheEnabled(true);
+        offersWebView.setWebViewClient(new WebViewClient());
+        offersWebView.setWebChromeClient(new WebChromeClient());
+        String url = getResources().getString(R.string.host) + "/taaraBackend/offers.html";
+        offersWebView.loadUrl(url);
+
     }
 
     @Override
@@ -121,6 +146,7 @@ public class AccountInformation extends AppCompatActivity
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -140,8 +166,14 @@ public class AccountInformation extends AppCompatActivity
             return true;
         }
 
+        if (id == R.id.startShoppingMenu) {
+            CheckInDialogFragment checkInDialogFragment = new CheckInDialogFragment();
+            checkInDialogFragment.show(getSupportFragmentManager(), "CHECK_IM");
+        }
+
         if (id == R.id.action_logout) {
             mAuth.signOut();
+            LogIn.needToLogin = true;
             Intent intent = new Intent(getApplicationContext(), LogIn.class);
             startActivity(intent);
             return true;
@@ -163,13 +195,18 @@ public class AccountInformation extends AppCompatActivity
             Intent intent = new Intent(getApplicationContext(), About.class);
             startActivity(intent);
 
+        } else if (id == R.id.nav_notifications) {
+            Intent intent = new Intent(getApplicationContext(), Notifications.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             mAuth.signOut();
+            LogIn.needToLogin = true;
             Intent intent = new Intent(getApplicationContext(), LogIn.class);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
             String playStoreUrl = "https://play.google.com/taara";
             Intent sendIntent = new Intent(Intent.ACTION_SEND);
+            sendIntent.setType("text/plain");
             sendIntent.putExtra(Intent.EXTRA_TEXT, playStoreUrl);
             String title = getResources().getString(R.string.share_app);
             Intent chooser = Intent.createChooser(sendIntent, title);
@@ -195,8 +232,23 @@ public class AccountInformation extends AppCompatActivity
     protected void onResume() {
         mFullName = sharedPreferences.getString("FIRST_NAME", null) + " " + sharedPreferences.getString("SECOND_NAME", null);
         mEmail = sharedPreferences.getString("EMAIL", null);
+        Log.i("profile", mFullName);
         txtfullname.setText(mFullName);
         txtEmail.setText(mEmail);
         super.onResume();
+    }
+
+    @Override
+    public void updateNavigationDrawerHeader(SharedPreferences sharedPreferences) {
+        mFullName = sharedPreferences.getString("FIRST_NAME", null) + " " + sharedPreferences.getString("SECOND_NAME", null);
+        mEmail = sharedPreferences.getString("EMAIL", null);
+        Log.i("profile", mFullName);
+        txtfullname.setText(mFullName);
+        txtEmail.setText(mEmail);
+    }
+
+    @Override
+    public void onListFragmentInteraction(RecentProductOccurrences.ProductOccurrence item) {
+
     }
 }

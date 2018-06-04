@@ -125,10 +125,20 @@
     <string name="twitterlink">Twitter help Link</string>
     <string name="youtubeink">Youtube Channel Link</string>
     <string name="share_app">SHARE TAARA APP</string>
+    <string name="no_notifications_yet">No notifications yet</string>
+    <string name="recent_actvity">Recent Activity</string>
+    <string name="your_actvity">Your Activity</string>
+    <string name="compare_recent">COMPARE RECENT</string>
+    <string name="all_history">ALL HISTORY</string>
     <string-array name="feedback_options">
         <item>General Feedback</item>
         <item>Help</item>
         <item>Enquiries</item>
     </string-array>
+    <string name="title_activity_tab_sample">TabSample</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
+    <string name="dummy">Dummy string</string>
 
 </resources>
