@@ -1,4 +1,4 @@
-package com.taara.android.taara.fragments;
+package com.taara.android.taara.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,8 +37,8 @@ public class MyRecentsMasterRecyclerViewAdapter extends RecyclerView.Adapter<MyR
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mProductTitle.setText(mValues.get(position).barcode);
-        holder.mProductDescription.setText(mValues.get(position).title);
+        holder.mProductTitle.setText(mValues.get(position).title);
+        holder.mProductDescription.setText(mValues.get(position).description);
         holder.mDateBought.setText(mValues.get(position).date_bought);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

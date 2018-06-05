@@ -36,6 +36,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.taara.android.taara.adapters.CartAdapter;
 import com.taara.android.taara.barcodereader.BarcodeCaptureActivity;
 import com.taara.android.taara.custom_objects.RestApiCall;
 

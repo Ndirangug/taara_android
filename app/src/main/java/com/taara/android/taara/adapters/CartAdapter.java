@@ -1,4 +1,4 @@
-package com.taara.android.taara;
+package com.taara.android.taara.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.taara.android.taara.R;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 

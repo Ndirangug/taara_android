@@ -102,7 +102,7 @@
     <string name="kshs_172_715">Kshs 172.715</string>
     <string name="confirm">CONFIRM</string>
     <string name="waiting">Waiting...</string>
-    <string name="host">http://artscircle.co.ke</string>
+    <string name="host">http://192.168.43.82</string>
     <string name="checkout_summary">SUMMARY</string>
     <string name="kshs_0_00">Kshs 0.00</string>
     <string name="change_if_not_correct">Change if not correct</string>
@@ -140,5 +140,10 @@
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
     <string name="dummy">Dummy string</string>
+    <string name="delete">Delete</string>
+    <string name="print">Print</string>
+    <string name="delete_all">Delete All</string>
+    <string name="paid">Paid: Kshs 200</string>
+    <string name="estimated_savings">Save: Kshs</string>
 
 </resources>

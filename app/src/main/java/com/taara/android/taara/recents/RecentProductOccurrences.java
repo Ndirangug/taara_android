@@ -16,17 +16,16 @@ public class RecentProductOccurrences {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<ProductOccurrence> ITEMS = new ArrayList<ProductOccurrence>();
+    public  final List<ProductOccurrence> ITEMS = new ArrayList<ProductOccurrence>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
     public static final Map<String, ProductOccurrence> ITEM_MAP = new HashMap<String, ProductOccurrence>();
 
-    private static final int COUNT = 25;
 
 
-    public static void addItem(ProductOccurrence item) {
+    public  void addItem(ProductOccurrence item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.barcode, item);
     }

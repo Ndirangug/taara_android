@@ -8,16 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.taara.android.taara.R;
-import com.taara.android.taara.RecentActivity;
+import com.taara.android.taara.adapters.MyRecentsMasterRecyclerViewAdapter;
 import com.taara.android.taara.custom_objects.RestApiCall;
 import com.taara.android.taara.recents.RecentProductOccurrences;
 import com.taara.android.taara.recents.RecentProductOccurrences.ProductOccurrence;
@@ -56,6 +56,7 @@ public class RecentsMasterFragment extends Fragment {
         fragment.recentProductOccurrences = new RecentProductOccurrences();
         fragment.connectivityManager = (ConnectivityManager) fragment.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         fragment.networkInfo = fragment.connectivityManager.getActiveNetworkInfo();
+        fragment.recentProductOccurrences = new RecentProductOccurrences();
         return fragment;
     }
 
@@ -67,26 +68,7 @@ public class RecentsMasterFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
-        if (RecentActivity.IS_CONNECTED) {
-            RequestQueue queue = Volley.newRequestQueue(getContext());
-            String url = getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=allhistory&userID=" + RecentActivity.USER_ID;
-            final RestApiCall restApiCall = new RestApiCall(getContext(), url);
-            queue.add(restApiCall.makeJsonArrayRequest());
 
-            RequestQueue.RequestFinishedListener requestFinishedListener = new RequestQueue.RequestFinishedListener() {
-                @Override
-                public void onRequestFinished(Request request) {
-                    String[][] response = restApiCall.getResponseArrayMultiDimensional();
-                    for (int i = 0; i < response.length; i++) {
-                        RecentProductOccurrences.addItem(new ProductOccurrence(response[i][1], response[i][5], response[i][6], response[i][0], response[i][4], response[i][3], response[i][2]));
-                    }
-                }
-            };
-            queue.addRequestFinishedListener(requestFinishedListener);
-        } else {
-            //Snackbar.make(getActivity().findViewById(R.id.offersWebView).getRootView(), "Could not get recent activity.Check your connection", Snackbar.LENGTH_INDEFINITE ).show();
-            Toast.makeText(getContext(), "Could not get recent activity.Check your connection", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -98,15 +80,42 @@ public class RecentsMasterFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            final RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            recyclerView.setAdapter(new MyRecentsMasterRecyclerViewAdapter(RecentProductOccurrences.ITEMS, mListener));
+            //recyclerView.setAdapter(new MyRecentsMasterRecyclerViewAdapter(RecentProductOccurrences.ITEMS, mListener));
+
+            // if (RecentActivity.IS_CONNECTED) {
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            String url = getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=allhistory&userID=" + mListener.getUserId();
+            final RestApiCall restApiCall = new RestApiCall(getContext(), url);
+            queue.add(restApiCall.makeJsonArrayRequest());
+
+            RequestQueue.RequestFinishedListener requestFinishedListener = new RequestQueue.RequestFinishedListener() {
+                @Override
+                public void onRequestFinished(Request request) {
+                    recentProductOccurrences = new RecentProductOccurrences();
+                    String[][] response = restApiCall.getResponseArrayMultiDimensional();
+                    for (int i = 0; i < response.length; i++) {
+                        recentProductOccurrences.addItem(new ProductOccurrence(response[i][1], response[i][5], response[i][6], response[i][0], response[i][4], response[i][3], response[i][2]));
+                    }
+
+                    recyclerView.setAdapter(new MyRecentsMasterRecyclerViewAdapter(recentProductOccurrences.ITEMS, mListener));
+                    Log.i("Multidimen", recentProductOccurrences.ITEMS.toString());
+                }
+            };
+            queue.addRequestFinishedListener(requestFinishedListener);
+//        } else {
+//            //Snackbar.make(getActivity().findViewById(R.id.offersWebView).getRootView(), "Could not get recent activity.Check your connection", Snackbar.LENGTH_INDEFINITE ).show();
+//            Toast.makeText(getContext(), "Could not get recent activity.Check your connection", Toast.LENGTH_LONG).show();
+//        }
         }
+
+
         return view;
     }
 
@@ -141,5 +150,6 @@ public class RecentsMasterFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(ProductOccurrence item);
+        String getUserId();
     }
 }

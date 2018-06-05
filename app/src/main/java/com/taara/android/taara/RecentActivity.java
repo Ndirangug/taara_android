@@ -142,7 +142,7 @@ public class RecentActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.account_information, menu);
+        getMenuInflater().inflate(R.menu.recent_activity, menu);
         return true;
     }
 
@@ -251,4 +251,11 @@ public class RecentActivity extends AppCompatActivity
     public void onListFragmentInteraction(RecentProductOccurrences.ProductOccurrence item) {
 
     }
+
+    @Override
+    public String getUserId() {
+        sharedPreferences = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
+        return sharedPreferences.getString("USER_ID", "user id");
+    }
+
 }
