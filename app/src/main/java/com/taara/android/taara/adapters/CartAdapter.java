@@ -12,7 +12,7 @@ import com.taara.android.taara.R;
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
 
     static int offset = 0;
-    static String[][] itemDetails = new String[40][5];
+    public static String[][] itemDetails = new String[40][5];
     /*index 0 => title
     index 1 => description
     index 2 => price
@@ -20,7 +20,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
     index 4 => VAT*/
     private Context mContext;
 
-    CartAdapter(Context context) {
+    public CartAdapter(Context context) {
         mContext = context;
     }
 
@@ -103,10 +103,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
         return number;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView title;
-        TextView price;
+        public TextView price;
         TextView description;
 
 

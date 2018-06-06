@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -22,15 +23,19 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.taara.android.taara.adapters.ProductCompareAdapter;
+import com.taara.android.taara.custom_objects.ProductOccurrences;
+import com.taara.android.taara.fragments.ProductCompare;
+import com.taara.android.taara.fragments.RecentProductCompare;
 import com.taara.android.taara.fragments.RecentsMasterFragment;
-import com.taara.android.taara.recents.RecentProductOccurrences;
 
 public class RecentActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EditProfileDialog.onProfileChangedListener, RecentsMasterFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EditProfileDialog.onProfileChangedListener, RecentsMasterFragment.OnRecentsMasterFragmentInteractionListener, RecentProductCompare.OnFragmentProductCompareInteractionListener {
     FirebaseAuth mAuth;
     int mBackPressedCounter;
     public static String USER_ID;
@@ -43,6 +48,9 @@ public class RecentActivity extends AppCompatActivity
     WebView offersWebView;
     ConnectivityManager connectivityManager;
     NetworkInfo networkInfo;
+    android.app.Fragment fragment;
+    FrameLayout frameLayout;
+    android.support.v4.app.FragmentManager fragmentManager;
 
 
 
@@ -62,7 +70,7 @@ public class RecentActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.setTitle(getResources().getString(R.string.your_actvity));
 
-
+        fragmentManager = getSupportFragmentManager();
         navigationView = findViewById(R.id.nav_view);
         sharedPreferences = getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
 
@@ -247,8 +255,20 @@ public class RecentActivity extends AppCompatActivity
         txtEmail.setText(mEmail);
     }
 
+
     @Override
-    public void onListFragmentInteraction(RecentProductOccurrences.ProductOccurrence item) {
+    public void onListFragmentInteraction(ProductOccurrences.ProductOccurrence item) {
+//        Fragment fragment = RecentProductCompare.newInstance(Double.valueOf(item.price), item.barcode);
+//        fragmentManager.beginTransaction().replace(R.id.itemsMaster, fragment).addToBackStack(null).commit();
+        ProductCompareAdapter.mPriceToCompareAgainst = Double.valueOf(item.price);
+        ProductCompare.mDescription = item.description;
+        ProductCompare.mPrice = "Kshs: " + item.price;
+        ProductCompare.mStore = item.store_name;
+        ProductCompare.mTitle = item.title;
+
+        Intent intent = new Intent(getApplicationContext(), ProductCompare.class);
+        intent.putExtra("BARCODE", item.barcode);
+        startActivity(intent);
 
     }
 
@@ -258,4 +278,9 @@ public class RecentActivity extends AppCompatActivity
         return sharedPreferences.getString("USER_ID", "user id");
     }
 
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

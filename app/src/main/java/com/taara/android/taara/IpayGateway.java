@@ -36,6 +36,7 @@ public class IpayGateway extends AppCompatActivity {
 
         Log.i("rfids", itemRfIds);
         url = getResources().getString(R.string.host) + "/taaraBackend/?android_api_call=checkout&itemIds=" + itemRfIds + "&amount=" + total + "&phone=" + phone + "&email=" + email + "&userId=" + userId;
+        Log.i("url formed", url);
         WebView webView = findViewById(R.id.ipayGateway);
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);

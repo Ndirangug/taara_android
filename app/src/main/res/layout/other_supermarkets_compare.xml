@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:padding="8dp"
-    android:gravity="center"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:weightSum="5"
-    android:orientation="horizontal"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:weightSum="5">
 
     <TextView
         android:id="@+id/store_name_compare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="4"
-        android:text="@string/dummy"/>
+        android:text="@string/dummy" />
 
     <LinearLayout
-        android:gravity="end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:gravity="center|end"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_marginBottom="8dp"
             android:id="@+id/price_compare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dummy"/>
+            android:layout_marginBottom="8dp"
+            android:text="@string/dummy" />
 
         <TextView
+            android:id="@+id/estimated_saving"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/estimated_saving"
-            android:text="@string/dummy"/>
+            android:text="@string/dummy" />
     </LinearLayout>
 </LinearLayout>

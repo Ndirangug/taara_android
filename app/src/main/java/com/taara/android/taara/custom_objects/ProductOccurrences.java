@@ -1,4 +1,4 @@
-package com.taara.android.taara.recents;
+package com.taara.android.taara.custom_objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Map;
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class RecentProductOccurrences {
+public class ProductOccurrences {
 
     /**
      * An array of sample (dummy) items.

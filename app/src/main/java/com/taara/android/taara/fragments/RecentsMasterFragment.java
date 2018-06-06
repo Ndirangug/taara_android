@@ -18,26 +18,26 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.taara.android.taara.R;
 import com.taara.android.taara.adapters.MyRecentsMasterRecyclerViewAdapter;
+import com.taara.android.taara.custom_objects.ProductOccurrences;
+import com.taara.android.taara.custom_objects.ProductOccurrences.ProductOccurrence;
 import com.taara.android.taara.custom_objects.RestApiCall;
-import com.taara.android.taara.recents.RecentProductOccurrences;
-import com.taara.android.taara.recents.RecentProductOccurrences.ProductOccurrence;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnRecentsMasterFragmentInteractionListener}
  * interface.
  */
 public class RecentsMasterFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    RecentProductOccurrences recentProductOccurrences;
+    ProductOccurrences productOccurrences;
     ConnectivityManager connectivityManager;
     NetworkInfo networkInfo;
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnRecentsMasterFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -53,10 +53,10 @@ public class RecentsMasterFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
-        fragment.recentProductOccurrences = new RecentProductOccurrences();
+        fragment.productOccurrences = new ProductOccurrences();
         fragment.connectivityManager = (ConnectivityManager) fragment.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         fragment.networkInfo = fragment.connectivityManager.getActiveNetworkInfo();
-        fragment.recentProductOccurrences = new RecentProductOccurrences();
+        fragment.productOccurrences = new ProductOccurrences();
         return fragment;
     }
 
@@ -83,11 +83,12 @@ public class RecentsMasterFragment extends Fragment {
             final RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                recyclerView.setHasFixedSize(true);
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            //recyclerView.setAdapter(new MyRecentsMasterRecyclerViewAdapter(RecentProductOccurrences.ITEMS, mListener));
+            //recyclerView.setAdapter(new MyRecentsMasterRecyclerViewAdapter(ProductOccurrences.ITEMS, mListener));
 
             // if (RecentActivity.IS_CONNECTED) {
             RequestQueue queue = Volley.newRequestQueue(getContext());
@@ -98,14 +99,14 @@ public class RecentsMasterFragment extends Fragment {
             RequestQueue.RequestFinishedListener requestFinishedListener = new RequestQueue.RequestFinishedListener() {
                 @Override
                 public void onRequestFinished(Request request) {
-                    recentProductOccurrences = new RecentProductOccurrences();
+                    productOccurrences = new ProductOccurrences();
                     String[][] response = restApiCall.getResponseArrayMultiDimensional();
                     for (int i = 0; i < response.length; i++) {
-                        recentProductOccurrences.addItem(new ProductOccurrence(response[i][1], response[i][5], response[i][6], response[i][0], response[i][4], response[i][3], response[i][2]));
+                        productOccurrences.addItem(new ProductOccurrence(response[i][1], response[i][5], response[i][6], response[i][0], response[i][4], response[i][3], response[i][2]));
                     }
 
-                    recyclerView.setAdapter(new MyRecentsMasterRecyclerViewAdapter(recentProductOccurrences.ITEMS, mListener));
-                    Log.i("Multidimen", recentProductOccurrences.ITEMS.toString());
+                    recyclerView.setAdapter(new MyRecentsMasterRecyclerViewAdapter(productOccurrences.ITEMS, mListener));
+                    Log.i("Multidimen", productOccurrences.ITEMS.toString());
                 }
             };
             queue.addRequestFinishedListener(requestFinishedListener);
@@ -123,11 +124,11 @@ public class RecentsMasterFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnRecentsMasterFragmentInteractionListener) {
+            mListener = (OnRecentsMasterFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnRecentsMasterFragmentInteractionListener");
         }
     }
 
@@ -147,7 +148,7 @@ public class RecentsMasterFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface OnRecentsMasterFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(ProductOccurrence item);
         String getUserId();

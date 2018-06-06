@@ -37,6 +37,7 @@
         <activity android:name=".About" />
         <activity android:name=".HelpAndFeedback" />
         <activity android:name=".Notifications" />
+        <activity android:name=".fragments.ProductCompare"></activity>
     </application>
 
 </manifest>

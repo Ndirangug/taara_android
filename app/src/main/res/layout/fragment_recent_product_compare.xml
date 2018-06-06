@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:gravity="center"
-            android:text="@string/back"
+            android:text="@string/other_supermarkets"
             android:textColor="@android:color/white"
             android:textSize="25sp"
             android:textStyle="bold" />
@@ -67,11 +67,13 @@
                 tools:layout_editor_absoluteY="637dp">
 
                 <TextView
+                    android:id="@+id/compareTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/dummy" />
 
                 <TextView
+                    android:id="@+id/comparereDesctiption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -79,12 +81,14 @@
                     android:text="@string/dummy" />
 
                 <TextView
+                    android:id="@+id/compareStore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/dummy" />
 
             </LinearLayout>
             <TextView
+                android:id="@+id/comparePrice"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
